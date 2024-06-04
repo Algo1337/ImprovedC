@@ -1,6 +1,8 @@
 #ifndef TYPES_H
 #define TYPES_H
 
+#include "../iclibs/ic/string/str.h"
+
 typedef enum DATA_T {
     NULL_VAR                                = 0x0000001, // NO VALUE
 
@@ -22,14 +24,16 @@ typedef enum DATA_T {
 } DATA_T;
 
 typedef enum INCLUDE_ERR_T {
-    INVALID_PATH_ERR                        = 0x10000020,
-    INVALID_PATH_FILES_ERR                  = 0x10000021
+    NO_INCLUDE_ERR                          = 0x10000020,
+    INVALID_PATH_ERR                        = 0x10000021,
+    INVALID_PATH_FILES_ERR                  = 0x10000022
 } INCLUDE_ERR_T;
 
 typedef enum FILE_ERR_T {
-    INVALID_FILE_EXTENSION_ERR              = 0x20000030,
-    INVALID_SRC_CODE_ERR                    = 0x20000031,
-    MISSING_ENTRY_FNC_ERR                   = 0x20000032
+    NO_FILE_ERR                             = 0x20000030,
+    INVALID_FILE_EXTENSION_ERR              = 0x20000031,
+    INVALID_SRC_CODE_ERR                    = 0x20000032,
+    MISSING_ENTRY_FNC_ERR                   = 0x20000033
 } FILE_ERR_T;
 
 typedef enum VAR_ERR_T {
@@ -39,15 +43,17 @@ typedef enum VAR_ERR_T {
     INVALID_VAR_NAME_ERR                    = 0x3000002,
     MISSING_VAR_NAME_ERR                    = 0x3000003,
 
-    EMPTY_STR_VALUE_ERR                     = 0x3000004,
-    INVALID_VAR_VALUE_ERR                   = 0x3000005,
-    MISSING_VAR_VALUE_ERR                   = 0x3000006,
+    INVALID_TYPE_ERR                        = 0x3000004,
 
-    VAR_DECLARATION_ERR                     = 0x3000007,
-    VAR_EXPRESSION_ERR                      = 0x3000008,
-    VALUE_SET_ERR                           = 0x3000009,
-    APPENDANCE_ERR                          = 0x3000010,
-    MEMORY_ERR                              = 0x3000011
+    EMPTY_STR_VALUE_ERR                     = 0x3000005,
+    INVALID_VAR_VALUE_ERR                   = 0x3000006,
+    MISSING_VAR_VALUE_ERR                   = 0x3000007,
+
+    VAR_DECLARATION_ERR                     = 0x3000008,
+    VAR_EXPRESSION_ERR                      = 0x3000009,
+    VALUE_SET_ERR                           = 0x3000010,
+    APPENDANCE_ERR                          = 0x3000011,
+    MEMORY_ERR                              = 0x3000012
 } VAR_ERR_T;
 
 typedef enum STRUCT_ERR_T {

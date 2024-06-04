@@ -24,7 +24,9 @@ typedef enum STRING_EDIT_T {
 	_REMOVE,
 	_REPLACE,
 	_RMCHAR,
-	_SPLIT
+	_SPLIT,
+	_TOLOWERCASE,
+	_TOUPPERCASE
 } STRING_EDIT_T;
 
 typedef struct String {
@@ -44,6 +46,8 @@ long __StartsWith(String *s, const char *str);
 long __EndsWith(String *s, const char *str);
 long __IsLowercase(String *s);
 int __IsUppercase(String *s);
+char *__ToLowercase(String *s);
+char *__ToUppercase(String *s);
 int __RmChar(String *s, const char chr);
 long __Replace(String *s, char *substr, char *replacement);
 char *get_va_arg_str(va_list a);

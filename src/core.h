@@ -20,6 +20,7 @@ typedef struct ImprovedC {
 	File 	*src_file;
 } ImprovedC;
 
-ImprovedC *parse();
+ImprovedC *analyze_file();
+FILE_ERR_T parse(ImprovedC *ic);
 
 #endif

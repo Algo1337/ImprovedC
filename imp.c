@@ -9,6 +9,6 @@ int main(int argc, char *argv[]) {
 		err_n_exit("[ X ] Error, no 'ic' or 'c' file provided...\r\n");
 
 	char *file = (char *)argv[1];
-	ImprovedC *ic = parse(file);
+	ImprovedC *ic = analyze_file(file);
 	return 0;
 }

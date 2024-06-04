@@ -2,18 +2,20 @@
 *   [ C String Library ]
 *   Using the minimum library(s) possible
 *
-* Length       ( cString->Length(s)                 )   long 	DONE
-* Strip        ( cString->Strip(s)                  )   long	DONE
-* Trim         ( cString->Trim(s, "")               )   void	DONE
-* Contains     ( cString->Contains(s, "Hello")      )   int
-* CountChar    ( cString->CountChar(s, 'c')         )   long	DONE
-* CountSubstr  ( cString->CountSubstr(s, "")        )   long
-* StartsWith   ( cString->StartsWith(s, "Hello")    )   int
-* EndsWith     ( cString->EndsWith(s, "World")      )   int
-* IsLowercase  ( cString->IsLowercase(s)            )   int
-* IsUppercase  ( cString->IsUppercase(s)            )   int
-* RmChar       ( cString->RmChar(s, 'c')            )   void
-* Replace      ( cString->ReplaceChar(s, 'c')       )   void
+* Length       ( String->Length(s)                 )    long 	    DONE
+* Strip        ( String->Strip(s)                  )    long        DONE
+* Trim         ( String->Trim(s, "")               )    void        DONE
+* Contains     ( String->Contains(s, "Hello")      )    long        DONE
+* CountChar    ( String->CountChar(s, 'c')         )    long	    DONE
+* CountSubstr  ( String->CountSubstr(s, "")        )    long        DONE
+* StartsWith   ( String->StartsWith(s, "Hello")    )    long        DONE
+* EndsWith     ( String->EndsWith(s, "World")      )    long        DONE
+* IsLowercase  ( String->IsLowercase(s)            )    long        DONE
+* IsUppercase  ( String->IsUppercase(s)            )    long        DONE
+* ToLower      ( String->ToLowercase(s)            )    long
+* ToUppercase  ( String->ToUppercase(s)            )    long
+* RmChar       ( String->RmChar(s, 'c')            )    void        DONE
+* Replace      ( String->ReplaceChar(s, 'c')       )    void        DONE
 */
 #include <stdio.h>
 #include <string.h>
@@ -49,6 +51,9 @@ void *__edit_str(String *s, STRING_EDIT_T mode, ...) {
 		case _STARTSWITH:       { return (void *)__StartsWith(s, get_va_arg_str(args)); }
 		case _ENDSWITH:         { return (void *)__EndsWith(s, get_va_arg_str(args)); }
 		case _ISLOWERCASE:      { return (void *)__IsLowercase(s); }
+        case _ISUPPERCASE:      { return (void *)__IsUppercase(s); }
+        case _TOLOWERCASE:      { return (void *)__ToLowercase(s); }
+        case _TOUPPERCASE:      { return (void *)__ToUppercase(s); }
         case _SPLIT:            { return (void *)__SplitChar(s, get_va_arg_char(args)); }
         case _REPLACE:          { return (void *)__Replace(s, get_va_arg_str(args), get_va_arg_str(args)); }
 	}
@@ -155,6 +160,32 @@ int __IsUppercase(String *s) {
             return 0;
 
     return 1;
+}
+
+char *__ToLowercase(String *s) {
+    char *new_data = (char *)malloc(strlen(s->Data) + 1);
+    memset(new_data, '\0', strlen(s->Data) + 1);
+
+    for(int i = 0; i < strlen(s->Data); i++)
+        new_data[i] = tolower(s->Data[i]);
+
+    if(strlen(new_data) > 0)
+        return new_data;
+
+    return (char *)"";
+}
+
+char *__ToUppercase(String *s) {
+    char *new_data = (char *)malloc(strlen(s->Data) + 1);
+    memset(new_data, '\0', strlen(s->Data) + 1);
+
+    for(int i = 0; i < strlen(s->Data); i++)
+        new_data[i] = toupper(s->Data[i]);
+
+    if(strlen(new_data) > 0)
+        return new_data;
+
+    return (char *)"";
 }
 
 int __RmChar(String *s, const char chr) {

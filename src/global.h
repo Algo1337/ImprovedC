@@ -5,6 +5,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "types.h"
+
 void err_n_exit(char *msg);
 
 #endif
