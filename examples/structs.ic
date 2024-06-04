@@ -1,0 +1,5 @@
+
+struct Person {
+	string name;
+	integer age;
+};

@@ -1,0 +1,31 @@
+
+
+string name = "Chris";
+integer age = 23;
+switch(age) {
+	case 20:
+		break;
+	case 22:
+		break;
+	case 23:
+		break;
+	default:
+		break;
+}
+
+
+switch(name) {
+	"Bob":
+		break;
+
+	"Chris":
+		break;	
+}
+
+
+switch(name) {
+	MATCH ; "B":
+		break;
+	CONTAINS, STARTS_WITH ; "C":
+		break;
+}

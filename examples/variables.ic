@@ -1,0 +1,6 @@
+
+string foo;
+foo = "Test";
+foo += "ing This";
+
+string bar = "New";

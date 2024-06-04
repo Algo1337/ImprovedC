@@ -1,0 +1,8 @@
+
+fn __init__() [] {
+
+} struct;
+
+fn name(string c) [] {
+	C.printf("%s", c);
+}
