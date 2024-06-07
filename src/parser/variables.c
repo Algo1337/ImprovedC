@@ -28,38 +28,97 @@
 /* Parsing lines starting with a type */
 // Only accepting 'inline' variables
 Variable *new_variable(char* var_data) {
-    Variable *var = (Variable *)malloc(sizeof(Variable *));
-    String *v_info = string(var_data);
+    Variable *var       = (Variable *)malloc(sizeof(Variable));
+    var->cgen           = (char *)malloc(strlen(var_data) + 1);
+    var->info           = string(var_data);
+    long arg_count      = (long)var->info->Utils(var->info, _COUNTCH, ' ') + 1;
+    var->args           = (char **)var->info->Utils(var->info, _SPLIT, ' ');
 
-    if(!v_info->Utils(v_info, _ENDSWITH, ';')) {
-        printf("\x1b[31m[ X ] Error, Missing a semi-colon ';' at end of line....!\n");
-        exit(0);
+    if(!var->info->Utils(var->info, _ENDSWITH, ";")) {
+        printf("[ X ] Error, Missing a semi-colon ';' at end of line....!\n");
+        return var;
     }
 
-    long arg_count = (long)v_info->Utils(v_info, _COUNTCH, ' ');
-    char **args = (char **)v_info->Utils(v_info, _SPLIT, ' ');
+    /*
+    *   TODO:
+    *           - Ensure variable has been previously declared when modifying
+    *           - Ensure variable isn't duplicated upon declaring one
+    *   If a TYPE is found, then a variable is being declared.
+    *   If type is not found then user is modifying a variable
+    */
+    VAR_ERR_T err_check = get_variable_type(var, var->args[0]);
+    if(err_check != NO_VAR_ERR) {
+        // check for existing variable and modify it
+        return var;
+    }
 
-    switch(arg_count) {
-        case 1: { // FOR ERRS ONLY
-            printf("[ X ] Error, Invalid variable line. Missing variable name....!");
-            exit(0);
-            break;
-        }
-        case 2: { // Variable Declared (string foo;)
-            break;
-        }
-        case 3: { // Variable Set/Append Value (foo = "t"; foo += "est";)
-            break;
-        }
-        case 4: { // Variable declaration with value
-            break;
-        }
-        default: {
-            break;
+    err_check = get_variable_name(var, var->args[1]);
+    if(err_check == INVALID_VAR_NAME_ERR) {
+        SetVarError(var, err_check, "Error, Invalid Variable Name!");
+    }
+
+    if(arg_count > 2) {
+        err_check = get_variable_expression(var, var->args[2]);
+        if(err_check != NO_VAR_ERR) {
+            SetVarError(var, err_check, "Error, Invalid Expression!");
         }
     }
+
+    if(arg_count > 3) {
+        err_check = get_variable_value(var, var->info, var->args);
+        if(err_check != NO_VAR_ERR) {
+            SetVarError(var, err_check, "Error, Invalid Value!");
+        }
+    }
+
+    printf("%s\n", var->cgen);
 
     return var;
+}
+
+VAR_ERR_T get_variable_type(Variable *var, char *type) {
+    DATA_T chk = str2type(type);
+    if((long)chk == (long)NULL_VAR)
+        return INVALID_VAR_TYPE_ERR;
+
+    var->type = chk; // Set Type To Variable
+    strcat(var->cgen, (char *)type_to_cgen(chk));  // Start cGEN
+    return NO_VAR_ERR;
+}
+
+VAR_ERR_T get_variable_name(Variable *var, char *name) {
+    // ensure user isn't using an existing name
+    var->name = name;
+    strcat(var->cgen, " ");
+    strcat(var->cgen, name);
+    return NO_VAR_ERR;
+}
+
+VAR_ERR_T get_variable_expression(Variable *var, char *expr) {
+    // TODO: check if expression is valid
+    strcat(var->cgen, " ");
+    strcat(var->cgen, expr);
+    return NO_VAR_ERR;
+}
+
+VAR_ERR_T get_variable_value(Variable *var, String *v_info, char **args) {
+    long quotes = (long)v_info->Utils(v_info, _COUNTCH, '"');
+    if(var->type == STRING) {
+        if((quotes < 2))
+            return INCOMPLETED_STRING_ERR;
+        // validateString()
+    }
+
+    if(args[3] == NULL) return EMPTY_STR_VALUE_ERR;
+
+    var->value = (char *)malloc(strlen(args[3]) + 1);
+    memset(var->value, '\0', strlen(args[3]) + 1);
+    strcpy(var->value, args[3]);
+
+    strcat(var->cgen, " ");
+    strcat(var->cgen, args[3]);
+
+    return NO_VAR_ERR;
 }
 
 // Incase of variable re-use with hardcoded strings
@@ -73,12 +132,11 @@ VAR_ERR_T __SetNewValue(Variable *var, char *data) {
     }
 
     free(var->value);
-    var->var_name = data;
     return NO_VAR_ERR;
 }
 
 // Strings Only
-VAR_ERR_T __StrAppend(Variable *var, char *data) {
+VAR_ERR_T __AppendValue(Variable *var, char *data) {
     if(data == NULL)
         return EMPTY_STR_VALUE_ERR;
 
@@ -97,17 +155,44 @@ VAR_ERR_T __StrAppend(Variable *var, char *data) {
     return NO_VAR_ERR;
 }
 
-// Ensure both side types 
-// += 4;
-// i + 4;
-int __IntMathematic(Variable *var, char *data) {
-
+void SetVarError(Variable *var, VAR_ERR_T err, char *msg) {
+    var->err = err;
+    var->msg = strdup(msg);
 }
 
 void __dieVar(Variable *var) {
-    if(var->var_name)
-        free(var->var_name);
+    if(var->name)
+        free(var->name);
 
     if(var->value);
         free(var->value);
+
+    free(var->args);
+    free(var->info);
+}
+
+void debug_types() {
+    int i = 0;
+    while(TYPES_STR[i] != NULL)
+        printf("[%d] %s\n", TYPES[i], TYPES_STR[i++]);
+}
+
+int validateString(const char *str) {
+    int i = 0;
+    while (str[i] != '\0') {
+        if (str[i] == '\\') {
+            switch (str[++i]) {
+                case '"':
+                case '\'':
+                case '\\':
+                    break;
+                default:
+                    return 0;
+            }
+        } else if (str[i] == '\"' || str[i] == '\'') {
+            return 0;
+        }
+        i++;
+    }
+    return 1;
 }

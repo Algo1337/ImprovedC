@@ -36,10 +36,11 @@ String *string(char *data) {
 }
 
 void *__edit_str(String *s, STRING_EDIT_T mode, ...) {
+    int first = 1, sec = 2;
 	va_list args;
     switch(mode) {
-        case _REPLACE: { va_start(args, 2); }
-        default: { va_start(args, 1); }
+        case _REPLACE: { va_start(args, first); }
+        default: { va_start(args, sec); }
     }
 
 	switch(mode) {
@@ -56,6 +57,7 @@ void *__edit_str(String *s, STRING_EDIT_T mode, ...) {
         case _TOUPPERCASE:      { return (void *)__ToUppercase(s); }
         case _SPLIT:            { return (void *)__SplitChar(s, get_va_arg_char(args)); }
         case _REPLACE:          { return (void *)__Replace(s, get_va_arg_str(args), get_va_arg_str(args)); }
+        case _GETSUBSTR:        { return (void *)__get_substr(s, get_va_arg_char(args), get_va_arg_char(args)); }
 	}
 
 	return 0;
@@ -74,11 +76,12 @@ long __Strip(String *s) {
 
     while (isspace(s->Data[start])) {
         start++;
+        found++;
     }
 
     while (end >= start && isspace(s->Data[end])) {
-
         end--;
+        found++;
     }
 
     char *trimmed = strndup(s->Data + start, end - start + 1);
@@ -246,11 +249,44 @@ char **__SplitChar(String *s, char delim) {
 	return arr;
 }
 
+char *__get_substr(String *s, char start, char end) {
+    char *new_str = (char *)malloc_ch(strlen(s->Data) + 1);
+    if (new_str == NULL)
+        return NULL;
+
+    memset(new_str, '\0', strlen(s->Data) + 1);
+
+    int start_found = 0;
+    int new_str_index = 0;
+    for(int i = 0; i < strlen(s->Data); i++) {
+        if (!start_found && s->Data[i] == start) {
+            start_found = 1;
+            continue;
+        }
+
+        if (start_found) {
+            if (s->Data[i] == end)
+                break;
+
+            new_str[new_str_index] = s->Data[i];
+            new_str_index++;
+        }
+    }
+
+    return new_str;
+}
+
 void __updateString(String *s, char *new_data) {
     if(s->Data != NULL || strlen(s->Data) > 0)
         free(s->Data);
 
     s->Data = strdup(new_data);
+}
+
+char *malloc_ch(int sz) {
+    char *n = (char *)malloc(sz + 1);
+    memset(n, '\0', sz + 1);
+    return n;
 }
 
 char *get_va_arg_str(va_list a) {

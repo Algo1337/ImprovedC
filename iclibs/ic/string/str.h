@@ -26,7 +26,8 @@ typedef enum STRING_EDIT_T {
 	_RMCHAR,
 	_SPLIT,
 	_TOLOWERCASE,
-	_TOUPPERCASE
+	_TOUPPERCASE,
+	_GETSUBSTR,
 } STRING_EDIT_T;
 
 typedef struct String {
@@ -52,8 +53,10 @@ int __RmChar(String *s, const char chr);
 long __Replace(String *s, char *substr, char *replacement);
 char *get_va_arg_str(va_list a);
 char get_va_arg_char(va_list a);
-void *__edit_str(String *s, STRING_EDIT_T mode, ...);
+char *__get_substr(String *s, char start, char end);
 char **__SplitChar(String *s, char delim);
+void *__edit_str(String *s, STRING_EDIT_T mode, ...);
 void __updateString(String *s, char *new_data);
+char *malloc_ch(int sz);
 
 #endif

@@ -18,6 +18,7 @@ typedef struct ImprovedC {
 
 	/* Current Settings/Check Values */
 	File 	*src_file;
+	char 	*cGEN;
 } ImprovedC;
 
 ImprovedC *analyze_file();

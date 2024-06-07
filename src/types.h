@@ -3,8 +3,9 @@
 
 #include "../iclibs/ic/string/str.h"
 
+// Special Value Representation
 typedef enum DATA_T {
-    NULL_VAR                                = 0x0000001, // NO VALUE
+    NULL_VAR                                = 0x00000001, // NO VALUE
 
     /* C Types */
     VOID                                    = 0x00000002,
@@ -13,15 +14,28 @@ typedef enum DATA_T {
     CHAR_PTR                                = 0x00000005,
     CHAR_DPTR                               = 0x00000006,
     INT                                     = 0x00000007,
+    INT_PTR                                 = 0x00000008,
+    FLOAT                                   = 0x00000009,
+    DOUBLE                                  = 0x00000010,
 
     /* IC TYPES */
-    STRING                                  = 0x00000008,
-    INTEGER                                 = 0x00000009,
-    ARRAY                                   = 0x00000010,
-    MAP                                     = 0x00000011,
-    FLOAT                                   = 0x00000012,
-    DOUBLE                                  = 0x00000013
+    STRING                                  = 0x00000011,
+    INTEGER                                 = 0x00000012,
+    ARRAY                                   = 0x00000013,
+    MAP                                     = 0x00000014,
+    F32                                     = 0x00000015,
+    F64                                     = 0x00000016,
+    DF64                                    = 0x00000017
 } DATA_T;
+
+extern DATA_T TYPES[];
+extern char *TYPES_STR[];
+
+typedef enum EXPRESSION_T {
+    NO_EXPR_ERR                             = 0x00000100,
+    EQUAL                                   = 0x00000101,
+    APPEND                                  = 0x00000102,
+} EXPRESSION_T;
 
 typedef enum INCLUDE_ERR_T {
     NO_INCLUDE_ERR                          = 0x10000020,
@@ -35,26 +49,6 @@ typedef enum FILE_ERR_T {
     INVALID_SRC_CODE_ERR                    = 0x20000032,
     MISSING_ENTRY_FNC_ERR                   = 0x20000033
 } FILE_ERR_T;
-
-typedef enum VAR_ERR_T {
-    NO_VAR_ERR                              = 0x3000000,
-    INVALID_DECLARATION                     = 0x3000001,
-
-    INVALID_VAR_NAME_ERR                    = 0x3000002,
-    MISSING_VAR_NAME_ERR                    = 0x3000003,
-
-    INVALID_TYPE_ERR                        = 0x3000004,
-
-    EMPTY_STR_VALUE_ERR                     = 0x3000005,
-    INVALID_VAR_VALUE_ERR                   = 0x3000006,
-    MISSING_VAR_VALUE_ERR                   = 0x3000007,
-
-    VAR_DECLARATION_ERR                     = 0x3000008,
-    VAR_EXPRESSION_ERR                      = 0x3000009,
-    VALUE_SET_ERR                           = 0x3000010,
-    APPENDANCE_ERR                          = 0x3000011,
-    MEMORY_ERR                              = 0x3000012
-} VAR_ERR_T;
 
 typedef enum STRUCT_ERR_T {
     NO_STRUCT_ERR                           = 0x4000000,
@@ -91,5 +85,8 @@ typedef enum FNC_ERR_T {
     FNC_CREATION_ATTEMPT_ERR                = 0x5000013,
     STRUCT_CREATION_ATTEMPT_ERR             = 0x5000014
 } FNC_ERR_T;
+
+DATA_T str2type(char *t);
+char *type_to_cgen(DATA_T t);
 
 #endif
