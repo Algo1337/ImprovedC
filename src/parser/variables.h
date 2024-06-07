@@ -38,9 +38,9 @@ typedef struct Variable {
 Variable *new_variable(char *var_data);
 
 /* Variable Parsing Functions */
-VAR_ERR_T get_variable_type(Variable *var, char *type);
-VAR_ERR_T get_variable_name(Variable *var, char *name);
-VAR_ERR_T get_variable_expression(Variable *var, char *expr);
+VAR_ERR_T get_variable_type(Variable *var);
+VAR_ERR_T get_variable_name(Variable *var);
+VAR_ERR_T get_variable_expression(Variable *var);
 VAR_ERR_T get_variable_value(Variable *var, String *v_info, char **args);
 
 /* Variable Editing Functions */

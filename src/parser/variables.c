@@ -52,13 +52,13 @@ Variable *new_variable(char* var_data) {
         return var;
     }
 
-    err_check = get_variable_name(var, var->args[1]);
+    err_check = get_variable_name(var);
     if(err_check == INVALID_VAR_NAME_ERR) {
         SetVarError(var, err_check, "Error, Invalid Variable Name!");
     }
 
     if(arg_count > 2) {
-        err_check = get_variable_expression(var, var->args[2]);
+        err_check = get_variable_expression(var);
         if(err_check != NO_VAR_ERR) {
             SetVarError(var, err_check, "Error, Invalid Expression!");
         }
@@ -76,8 +76,8 @@ Variable *new_variable(char* var_data) {
     return var;
 }
 
-VAR_ERR_T get_variable_type(Variable *var, char *type) {
-    DATA_T chk = str2type(type);
+VAR_ERR_T get_variable_type(Variable *var) {
+    DATA_T chk = str2type(var->args[0]);
     if((long)chk == (long)NULL_VAR)
         return INVALID_VAR_TYPE_ERR;
 
@@ -86,37 +86,37 @@ VAR_ERR_T get_variable_type(Variable *var, char *type) {
     return NO_VAR_ERR;
 }
 
-VAR_ERR_T get_variable_name(Variable *var, char *name) {
+VAR_ERR_T get_variable_name(Variable *var) {
     // ensure user isn't using an existing name
-    var->name = name;
+    var->name = var->args[1];
     strcat(var->cgen, " ");
-    strcat(var->cgen, name);
+    strcat(var->cgen, var->args[1]);
     return NO_VAR_ERR;
 }
 
-VAR_ERR_T get_variable_expression(Variable *var, char *expr) {
+VAR_ERR_T get_variable_expression(Variable *var) {
     // TODO: check if expression is valid
     strcat(var->cgen, " ");
-    strcat(var->cgen, expr);
+    strcat(var->cgen, var->args[2]);
     return NO_VAR_ERR;
 }
 
-VAR_ERR_T get_variable_value(Variable *var, String *v_info, char **args) {
-    long quotes = (long)v_info->Utils(v_info, _COUNTCH, '"');
+VAR_ERR_T get_variable_value(Variable *var) {
+    long quotes = (long)var->info->Utils(var->info, _COUNTCH, '"');
     if(var->type == STRING) {
         if((quotes < 2))
             return INCOMPLETED_STRING_ERR;
         // validateString()
     }
 
-    if(args[3] == NULL) return EMPTY_STR_VALUE_ERR;
+    if(var->args[3] == NULL) return EMPTY_STR_VALUE_ERR;
 
-    var->value = (char *)malloc(strlen(args[3]) + 1);
-    memset(var->value, '\0', strlen(args[3]) + 1);
-    strcpy(var->value, args[3]);
+    var->value = (char *)malloc(strlen(var->args[3]) + 1);
+    memset(var->value, '\0', strlen(var->args[3]) + 1);
+    strcpy(var->value, var->args[3]);
 
     strcat(var->cgen, " ");
-    strcat(var->cgen, args[3]);
+    strcat(var->cgen, var->args[3]);
 
     return NO_VAR_ERR;
 }
