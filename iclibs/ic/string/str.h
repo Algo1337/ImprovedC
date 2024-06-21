@@ -15,6 +15,7 @@ typedef enum STRING_EDIT_T {
 	_COUNTSTR,
 	_STARTSWITH,
 	_ENDSWITH,
+	_ENDSWITHCH,
 	_ISLOWERCASE,
 	_ISUPPERCASE,
 
@@ -45,6 +46,7 @@ long __CountChar(String *s, char ch);
 long __CountSubstr(String *s, char *substr);
 long __StartsWith(String *s, const char *str);
 long __EndsWith(String *s, const char *str);
+long __EndsWithCh(String *s, const char ch);
 long __IsLowercase(String *s);
 int __IsUppercase(String *s);
 char *__ToLowercase(String *s);

@@ -10,5 +10,5 @@ build:
 	src/*.c \
 	src/parser/*.c \
 	iclibs/file/*.c \
-	iclibs/string/*.c \
+	iclibs/ic/string/*.c \
 	-o ic -g3 -ggdb

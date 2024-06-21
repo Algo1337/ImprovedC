@@ -4,20 +4,6 @@
 
 #include "types.h"
 
-// DATA_T str2type(char *data) {
-//     if(data == NULL)
-//         return NULL_VAR;
-
-//     int i = 0;
-//     while(str_types[i] != NULL) {
-//         if(strcmp(str_types[i], data))
-//             return data_types[i];
-//         i++;
-//     }
-
-//     return NULL_VAR;
-// }
-
 DATA_T TYPES[] = { VOID, VOID_PTR, CHAR, CHAR_PTR, CHAR_DPTR, INT, INT_PTR, FLOAT,
                         STRING, INTEGER, ARRAY, MAP, F32, F64, DF64 };
 
@@ -42,7 +28,7 @@ char *TYPES_STR[] = {
 
 char *type_to_cgen(DATA_T t) {
     int i = 0;
-    while(TYPES[i] != NULL) {
+    while(TYPES[i] != '\0') {
         if(t == TYPES[i])
             return TYPES_STR[i];
         i++;

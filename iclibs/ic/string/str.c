@@ -51,6 +51,7 @@ void *__edit_str(String *s, STRING_EDIT_T mode, ...) {
 		case _COUNTSTR:         { return (void *)__CountSubstr(s, get_va_arg_str(args)); }
 		case _STARTSWITH:       { return (void *)__StartsWith(s, get_va_arg_str(args)); }
 		case _ENDSWITH:         { return (void *)__EndsWith(s, get_va_arg_str(args)); }
+        case _ENDSWITHCH:       { return (void *)__EndsWithCh(s, get_va_arg_char(args)); }
 		case _ISLOWERCASE:      { return (void *)__IsLowercase(s); }
         case _ISUPPERCASE:      { return (void *)__IsUppercase(s); }
         case _TOLOWERCASE:      { return (void *)__ToLowercase(s); }
@@ -134,6 +135,19 @@ long __StartsWith(String *s, const char *str) {
 
     for(int i = 0; i < strlen(str); i++)
         if(s->Data[i] == str[i] && i == strlen(str)-1) return 1;
+
+    return 0;
+}
+
+long __EndsWithCh(String *s, const char ch) {
+    // if(ch == '\0')
+    //     return 0;
+
+    if(s->Data == NULL)
+        return 0;
+
+    if(s->Data[ strlen(s->Data) - 1 ] == ch) 
+        return 1;
 
     return 0;
 }

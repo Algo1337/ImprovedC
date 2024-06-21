@@ -88,7 +88,7 @@ int __remove(Array *a, int idx) {
     return 0;    
 }
 
-int merge(Array *a, char **arr) {
+int __merge(Array *a, char **arr) {
     if(a == NULL)
         return 0;
 
@@ -102,4 +102,25 @@ int merge(Array *a, char **arr) {
         strcpy(a->arr[i++], arr);
 
     return 1;
+}
+
+void rm_empty_elements(Array *a) {
+    if(a->arr == NULL)
+        return;
+
+    char **args = (char **)malloc(a->idx);
+    int i = 0;
+    while(a->arr[i] != NULL) {
+        if(&a->arr[i] != " ") {
+            args[i] = (char *)malloc_ch(strlen(a->arr[i]) + 1);
+            strcpy(args[i], a->arr[i]);
+        }
+    }
+
+    free(a->arr);
+    a->arr = args;
+}
+
+void *malloc_element(size_t sz) {
+    return malloc(sz);
 }

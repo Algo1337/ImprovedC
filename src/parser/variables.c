@@ -32,9 +32,10 @@ Variable *new_variable(char* var_data) {
     var->cgen           = (char *)malloc(strlen(var_data) + 1);
     var->info           = string(var_data);
     long arg_count      = (long)var->info->Utils(var->info, _COUNTCH, ' ') + 1;
+    var->info->Utils(var->info, _STRIP);
     var->args           = (char **)var->info->Utils(var->info, _SPLIT, ' ');
 
-    if(!var->info->Utils(var->info, _ENDSWITH, ";")) {
+    if(!var->info->Utils(var->info, _ENDSWITHCH, (const char)';')) {
         printf("[ X ] Error, Missing a semi-colon ';' at end of line....!\n");
         return var;
     }
@@ -46,7 +47,7 @@ Variable *new_variable(char* var_data) {
     *   If a TYPE is found, then a variable is being declared.
     *   If type is not found then user is modifying a variable
     */
-    VAR_ERR_T err_check = get_variable_type(var, var->args[0]);
+    VAR_ERR_T err_check = get_variable_type(var);
     if(err_check != NO_VAR_ERR) {
         // check for existing variable and modify it
         return var;
@@ -55,19 +56,22 @@ Variable *new_variable(char* var_data) {
     err_check = get_variable_name(var);
     if(err_check == INVALID_VAR_NAME_ERR) {
         SetVarError(var, err_check, "Error, Invalid Variable Name!");
+            return var;
     }
 
     if(arg_count > 2) {
         err_check = get_variable_expression(var);
         if(err_check != NO_VAR_ERR) {
             SetVarError(var, err_check, "Error, Invalid Expression!");
+            return var;
         }
     }
 
     if(arg_count > 3) {
-        err_check = get_variable_value(var, var->info, var->args);
+        err_check = get_variable_value(var);
         if(err_check != NO_VAR_ERR) {
             SetVarError(var, err_check, "Error, Invalid Value!");
+            return var;
         }
     }
 
@@ -101,6 +105,7 @@ VAR_ERR_T get_variable_expression(Variable *var) {
     return NO_VAR_ERR;
 }
 
+// TODO: Add more possible checks for strings 
 VAR_ERR_T get_variable_value(Variable *var) {
     long quotes = (long)var->info->Utils(var->info, _COUNTCH, '"');
     if(var->type == STRING) {

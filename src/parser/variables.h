@@ -41,7 +41,7 @@ Variable *new_variable(char *var_data);
 VAR_ERR_T get_variable_type(Variable *var);
 VAR_ERR_T get_variable_name(Variable *var);
 VAR_ERR_T get_variable_expression(Variable *var);
-VAR_ERR_T get_variable_value(Variable *var, String *v_info, char **args);
+VAR_ERR_T get_variable_value(Variable *var);
 
 /* Variable Editing Functions */
 VAR_ERR_T __SetNewValue(Variable *var, char *data);
