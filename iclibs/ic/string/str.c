@@ -264,6 +264,31 @@ char **__SplitChar(String *s, char delim) {
 	return arr;
 }
 
+
+Array **__str2array(String *s, char delim) {
+	long sz = __CountChar(s, delim);
+	char **arr = (char **)calloc(sz + 1, sizeof(char *));
+	arr[0] = (char *)malloc(sizeof(char *) * (strlen(s->Data) / 4));
+	memset(arr[0], '\0', (strlen(s->Data) / 4));
+
+	int idx = 0;
+	for(int i = 0; i < strlen(s->Data); i++) {
+		if(s->Data[i] == delim) {
+			idx++;
+			arr[idx] = (char *)malloc(sizeof(char *) * (strlen(s->Data) - i));
+			memset(arr[idx], '\0', (strlen(s->Data) - i));
+			continue;
+		}
+
+		strncat(arr[idx], &s->Data[i], sizeof(char));
+	}
+	arr[idx+1] = '\0';
+
+	Array *a = (Array *)malloc(sizeof(Array *));
+    a->arr = arr;
+    return a;
+}
+
 char *__get_substr(String *s, char start, char end) {
     char *new_str = (char *)malloc_ch(strlen(s->Data) + 1);
     if (new_str == NULL)

@@ -22,7 +22,6 @@ typedef enum VAR_ERR_T {
 } VAR_ERR_T;
 
 typedef struct Variable {
-    int         declaration; // If type is declared
     DATA_T      type; // If not declared (1) then check if its already in use
     char        *name;
     char        *value;

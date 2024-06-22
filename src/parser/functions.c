@@ -5,8 +5,16 @@
 #include "functions.h"
 
 Function *new_function(char *fnc_block) {
-    Function *fnc = (Function *)malloc(sizeof(Function *));
+    Function *fnc   = (Function *)malloc(sizeof(Function *));
+    fnc->info       = string(fnc_block);
+    Array *arr      = __str2array(fnc->info, ' ');
+    rm_empty_elements(arr);
 
+    if(!fnc->info->Utils(fnc->info, _ENDSWITHCH, (char)'{')) {
+        // multi-line function
+    }
+
+    // inline function (fn person() [] {} )
     return fnc;
 }
 

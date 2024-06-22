@@ -6,3 +6,9 @@ fn __init__() [] {
 fn name(string c) [] {
 	C.printf("%s", c);
 }
+
+fn personf(string name, int age) [] {}
+
+fn person(string name, int age) [] {
+	C.printf("Hi, My Name Is %s and I am %d years old", name, age);
+}

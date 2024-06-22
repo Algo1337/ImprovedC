@@ -2,6 +2,7 @@
 #define STR_H
 
 #include <stdarg.h>
+#include "../array/arr.h"
 
 typedef enum STRING_EDIT_T {
 	_NONE,
@@ -57,6 +58,7 @@ char *get_va_arg_str(va_list a);
 char get_va_arg_char(va_list a);
 char *__get_substr(String *s, char start, char end);
 char **__SplitChar(String *s, char delim);
+Array **__str2array(String *s, char delim);
 void *__edit_str(String *s, STRING_EDIT_T mode, ...);
 void __updateString(String *s, char *new_data);
 char *malloc_ch(int sz);

@@ -52,11 +52,12 @@ FILE_ERR_T parse(ImprovedC *ic) {
 
 		// New Variable Found
 		if(str2type(args[0]) != NULL_VAR && strlen(lines[i]) != 0) {
-			append_new_variable(ic, new_variable(lines[i]));
-		}
+			VAR_ERR_T err = (ic, new_variable(lines[i]));
 
-
-		if((long)src_code->Utils(src_code, _STARTSWITH, "fnc")) {
+			if(err != NO_VAR_ERR)
+				printf("Error\n");
+				
+		} else if((long)src_code->Utils(src_code, _STARTSWITH, "fnc")) {
 			printf("Function Found. Line #%d: %s\n", i, lines[i]);
 		} else if((long)src_code->Utils(src_code, _STARTSWITH, "struct")) {
 			printf("Struct Found. Line #%d: %s\n", i, lines[i]);
