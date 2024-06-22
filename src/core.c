@@ -20,6 +20,10 @@ ImprovedC *analyze_file(char *filep) {
     if(!ic->src_file)
             return ic;
 
+	ic->var_idx			= 0;
+	ic->vars			= (Variable **)malloc(sizeof(Variable *) * 1);
+	memset(ic->vars, '\0', 2);
+
 	FILE_ERR_T file_err = parse(ic);
 	if(!file_err == NO_FILE_ERR)
 		err_n_exit("[ x ] Error, An error occured while reading file content....!");
@@ -32,23 +36,6 @@ FILE_ERR_T parse(ImprovedC *ic) {
 	long line_count 	= (long)src_code->Utils(src_code, _COUNTCH, '\n');
 	char **lines 		= (char **)src_code->Utils(src_code, _SPLIT, '\n');
 	
-	Variable *var = new_variable(lines[1]);
-	Variable *var2 = new_variable(lines[2]);
-	
-	Variable *var3 = new_variable(lines[3]);
-	Variable *var4 = new_variable(lines[5]);
-	append_new_variable(ic, var);
-	append_new_variable(ic, var2);
-	append_new_variable(ic, var3);
-	append_new_variable(ic, var4);
-
-	long cnt = VariableCount(ic);
-	printf("Variable Count: %ld\n", cnt);
-
-	printf("%s", ic->vars[0]->name);
-	printf("%s", ic->vars[1]->name);
-
-
 	// TODO:
 	//		 - Add a 3-4 point checksum if line don't start with the following
 	//			keywords (datatype, fnc, struct)
@@ -63,8 +50,9 @@ FILE_ERR_T parse(ImprovedC *ic) {
 
 		// random lines are function calls and variable modification
 
-		if(str2type(args[0]) != NULL_VAR) {
-			// modify variable
+		// New Variable Found
+		if(str2type(args[0]) != NULL_VAR && strlen(lines[i]) != 0) {
+			append_new_variable(ic, new_variable(lines[i]));
 		}
 
 
@@ -73,6 +61,10 @@ FILE_ERR_T parse(ImprovedC *ic) {
 		} else if((long)src_code->Utils(src_code, _STARTSWITH, "struct")) {
 			printf("Struct Found. Line #%d: %s\n", i, lines[i]);
 		} 
+
+		if(is_var_declared(ic, args[0]) == 1) {
+			printf("Variable Modification Found: %s\n", args[0]);
+		}
 
 		free(line_info);
 	}
@@ -91,6 +83,18 @@ int VariableCount(ImprovedC *c) {
 	return i;
 }
 
+VAR_ERR_T is_datatype_valid(char *typ) {
+	int i = 0;
+	while(TYPES[i] != NULL) {
+		if(TYPES[i] == typ) {
+			return 1;
+		}
+		i++;
+	}
+
+	return 0;
+}
+
 VAR_ERR_T is_var_declared(ImprovedC *c, char *var_name) {
 	int i = 0;
 	while(c->vars[i] != NULL) {
@@ -104,17 +108,15 @@ VAR_ERR_T is_var_declared(ImprovedC *c, char *var_name) {
 }
 
 VAR_ERR_T append_new_variable(ImprovedC *c, Variable *var) {
-	printf("%d\n", VariableCount(c));
-	if(c->vars == NULL) {
-		c->vars = (Variable **)malloc(sizeof(Variable *) * (2 + 1));
-		memset(c->vars, '\0', sizeof(Variable *) * (2 + 1));
-		c->vars[0] = var;
+	if(c->var_idx == 0) {
+		c->vars[c->var_idx] = (Variable *)var;
+		c->var_idx++;
 		return NO_VAR_ERR;
 	}
 
-	int cnt = VariableCount(c) + 1;
-	c->vars = (Variable **)realloc(c->vars, sizeof(Variable *) * (cnt + 1));
-	c->vars[cnt] = var;
+	c->vars = (Variable **)realloc(c->vars, sizeof(Variable *) * (c->var_idx + 1));
+	c->vars[c->var_idx] = (Variable *)var;
+	c->var_idx++;
 
 	return NO_VAR_ERR;
 }

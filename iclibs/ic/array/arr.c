@@ -58,11 +58,11 @@ int __append(Array *a, char *data) {
     }
     
     a->arr = (char **)realloc(a->arr, sizeof(char *) * (a->idx + 1));
+    
     a->arr[a->idx-1] = (char *)malloc(sizeof(char) * (strlen(data) + 1));
     if(a->arr[a->idx-1] == NULL) return 0;
 
     memset(a->arr[a->idx-1], '\0', sizeof(char) * (strlen(data) + 1));
-
     strcpy(a->arr[a->idx-1], data);
     return 1;
 }

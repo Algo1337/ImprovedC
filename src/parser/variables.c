@@ -33,12 +33,14 @@ Variable *new_variable(char* var_data) {
     var->info           = string(var_data);
     long arg_count      = (long)var->info->Utils(var->info, _COUNTCH, ' ') + 1;
     var->info->Utils(var->info, _STRIP);
-    var->args           = (char **)var->info->Utils(var->info, _SPLIT, ' ');
 
     if(!var->info->Utils(var->info, _ENDSWITHCH, (const char)';')) {
         printf("[ X ] Error, Missing a semi-colon ';' at end of line....!\n");
         return var;
     }
+
+    var->info->Utils(var->info, _RMCHAR, (char)';');
+    var->args           = (char **)var->info->Utils(var->info, _SPLIT, ' ');
 
     /*
     *   TODO:
@@ -74,8 +76,6 @@ Variable *new_variable(char* var_data) {
             return var;
         }
     }
-
-    printf("%s\n", var->cgen);
 
     return var;
 }

@@ -14,14 +14,15 @@
 #include "parser/functions.h"
 
 typedef struct ImprovedC {
-	char 	*Filepath;
-	char 	**src_files;
+	char 		*Filepath;
+	char 		**src_files;
 
 	/* Current Settings/Check Values */
-	File 	*src_file;
-	char 	*cGEN;
+	File 		*src_file;
+	char 		*cGEN;
 
-	Variable **vars;
+	Variable 	**vars;
+	long 		var_idx;
 } ImprovedC;
 
 ImprovedC *analyze_file();
@@ -29,6 +30,7 @@ FILE_ERR_T parse(ImprovedC *ic);
 
 // Variable Methods
 int VariableCount(ImprovedC *c);
+VAR_ERR_T is_datatype_valid(char *typ);
 VAR_ERR_T is_var_declared(ImprovedC *c, char *var_name);
 VAR_ERR_T append_new_variable(ImprovedC *c, Variable *var);
 
@@ -37,5 +39,7 @@ FNC_ERR_T is_fnc_declared(ImprovedC *c, char *fnc_name);
 FNC_ERR_T append_new_fnc(ImprovedC *c, Function *fnc);
 
 void die(ImprovedC *c);
+
+
 #endif
 

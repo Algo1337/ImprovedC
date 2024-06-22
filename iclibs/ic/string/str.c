@@ -59,6 +59,7 @@ void *__edit_str(String *s, STRING_EDIT_T mode, ...) {
         case _SPLIT:            { return (void *)__SplitChar(s, get_va_arg_char(args)); }
         case _REPLACE:          { return (void *)__Replace(s, get_va_arg_str(args), get_va_arg_str(args)); }
         case _GETSUBSTR:        { return (void *)__get_substr(s, get_va_arg_char(args), get_va_arg_char(args)); }
+        case _RMCHAR:           { return (void *)__RmChar(s, get_va_arg_char(args)); }
 	}
 
 	return 0;
